@@ -11,6 +11,7 @@ var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
+var flash = require('connect-flash');
 
 var configDB = require('./config/database.js');
 
@@ -22,7 +23,7 @@ mongoose.connect(configDB.url , function (error) {
   }
 });
 
-// require('./config/passport')(passport); // pass passport for configuration
+require('./config/passport')(passport); // pass passport for configuration
 
 app.use(morgan('dev'));
 app.use(cookieParser());
@@ -33,6 +34,7 @@ app.use(session({ secret: 'ilovescotchscotchyscotchscotch' }));
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 require('./app/routes.js')(app, passport);
 
