@@ -1,4 +1,4 @@
-module.exports = function(app, passport) {
+module.exports = function(app, passport, request, cheerio, fs) {
 
 app.get('/', function(req, res) {
       res.render('index.ejs'); // load the index.ejs file
@@ -39,6 +39,49 @@ app.get('/profile', isLoggedIn, function(req, res) {
        req.logout();
        res.redirect('/');
    });
+
+  app.post('/change', function (req, res){
+    req.flash('info', 'Flash is back!');
+    res.render('profile-changed.ejs', { message: req.flash('info') });
+  });
+
+  app.get('/data', function(req, res){
+
+
+    var url = 'http://localhost:8080/change';
+
+    // The structure of our request call
+    // The first parameter is our URL
+    // The callback function takes 3 parameters, an error, response status code and the html
+
+    request(url, function(error, response, html){
+      if (error) {
+        console.log(error);
+      }
+      if (!error) {
+        console.log('html');
+        var $ = cheerio.load(html);
+        var text;
+        var json = { val: ' ' };
+
+        $('#text-container').filter(function(){
+          var data = $(this);
+          text = data.children('p').text();
+          json.val = text;
+        });
+
+        fs.writeFile('output.json', JSON.stringify(json, null, 4), function(error){
+          if(error){
+            console.log(error)
+          } else
+          console.log('File successfully written! - Check your project directory for the output.json file');
+        });
+
+      }
+    });
+  res.send('hi!');
+});
+
 };
 
 // route middleware to make sure a user is logged in
