@@ -70,7 +70,6 @@ request(url, function (error, response, body) {
       if ($(this).is(':header')){
         json[index] = $(this).text();
       }
-
     });
       console.log(json);
     // pageText.forEach(function(text){
