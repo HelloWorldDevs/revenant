@@ -41,44 +41,75 @@ app.get('/profile', isLoggedIn, function(req, res) {
    });
 
   app.post('/change', function (req, res){
-    req.flash('info', 'Flash is back!');
+    req.flash('info', 'Review your changes');
     res.render('profile-changed.ejs', { message: req.flash('info') });
   });
 
   app.get('/data', function(req, res){
 
 
-    var url = 'http://localhost:8080/change';
+    var url = 'http://www.omsi.edu/history-and-mission';
 
     // The structure of our request call
     // The first parameter is our URL
     // The callback function takes 3 parameters, an error, response status code and the html
 
-    request(url, function(error, response, html){
-      if (error) {
-        console.log(error);
-      }
-      if (!error) {
-        console.log('html');
-        var $ = cheerio.load(html);
-        var text;
-        var json = { val: ' ' };
-
-        $('#text-container').filter(function(){
-          var data = $(this);
-          text = data.children('p').text();
-          json.val = text;
-        });
-
-        fs.writeFile('output.json', JSON.stringify(json, null, 4), function(error){
-          if(error){
-            console.log(error)
-          } else
-          console.log('File successfully written! - Check your project directory for the output.json file');
-        });
-
-      }
+    // var request = require('request');
+request(url, function (error, response, body) {
+  if (error) {
+    console.log(error);
+  }
+  if (!error) {
+    var json = {};
+    // console.log(body);// Show the HTML for the OMSI mission page.
+    var $ = cheerio.load(body , {
+      normalizeWhitespace: true
     });
+    var pageHeaders = $(':header , p');
+    pageHeaders.each(function(index, header){
+      if ($(this).is(':header')){
+        json[index] = $(this).text();
+      }
+
+    });
+      console.log(json);
+    // pageText.forEach(function(text){
+    //   json.block = { text };
+    // });
+    // fs.writeFile('output.json', JSON.stringify(pageText, null, 4), function(error){
+    //   if (error) {
+    //     console.log(error);
+    //   } else {
+    //     console.log('File successfully written! - Check your project directory for the output.json file');
+    //   }
+    // });
+  }
+});
+    // request(url, function(error, response, html){
+    //   if (error) {
+    //     console.log(error);
+    //   }
+    //   if (!error) {
+    //     console.log('html');
+    //     var $ = cheerio.load(html);
+    //     var text;
+    //     var json = { val: ' ' };
+    //
+    //     $('#text-container').filter(function(){
+    //       var data = $(this);
+    //       text = data.children('p').text();
+    //       json.val = text;
+    //     });
+    //
+    //     fs.writeFile('output.json', JSON.stringify(json, null, 4), function(error){
+    //       if (error) {
+    //         console.log(error);
+    //       } else
+    //       console.log('File successfully written! - Check your project directory for the output.json file');
+    //     });
+    //
+    //   }
+    // });
   res.send('hi!');
 });
 
