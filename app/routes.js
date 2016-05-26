@@ -54,19 +54,20 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
     });
 
     app.get('/data', function(req, res) {
-        var json = [];
-        var url = 'http://www.omsi.edu/history-and-mission';
 
+        //request url
+        var url = 'http://www.omsi.edu/history-and-mission';
         request(url, function(error, response, body) {
             if (error) {
                 console.log(error);
             }
             if (!error) {
-
+              //load cheerio
                 var $ = cheerio.load(body, {
                     normalizeWhitespace: true
                 });
 
+                //get xpath function
                 function getXPath(element) {
                     var xpath = '';
                     for (; element && element.nodeType == 1; element = element.parentNode) {
@@ -77,12 +78,16 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
                     return xpath;
                 }
 
-                // console.log($.xml());
+                // parse cheerio html to xml to get element by xpath
                 var xml = $.xml();
                 var doc = new dom().parseFromString(xml);
 
+                //grab page text and use lodash uniq filter to eliminate duplicates
                 var $pageText = $('p');
                 _.uniq($pageText);
+
+                //store xpath in array
+                var json = [];
                 $pageText.each(function(index, element) {
                     var xPath = getXPath(element);
                     var xPathText = xpath.select(xPath, doc).toString()
@@ -92,18 +97,37 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
                         title : xPathText
                     });
                 });
-                // console.log(json);
 
+                //write json to output.json
                 fs.writeFile('output.json', JSON.stringify(json, null, 4), function(error) {
                     if (error) {
                         console.log(error);
                     } else {
-                        // console.log('File successfully written! - Check your project directory for the output.json file');
+                        console.log('File successfully written! - Check your project directory for the output.json file');
                     }
                 });
             }
         });
-        res.send('hi!');
+        var outputToJson;
+
+        function readJsonFileSync(filepath, encoding){
+        if (typeof (encoding) == 'undefined'){
+            encoding = 'utf8';
+        }
+        var file = fs.readFileSync(filepath, encoding);
+        return JSON.parse(file);
+        }
+
+        function getConfig(file){
+        var filepath = file;
+        return readJsonFileSync(filepath);
+        }
+
+        //assume that config.json is in application root
+
+        outputToJson = getConfig('output.json');
+
+        res.send(outputToJson);
     });
 };
 
