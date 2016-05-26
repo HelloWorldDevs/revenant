@@ -92,9 +92,9 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
                     var xPath = getXPath(element);
                     var xPathText = xpath.select(xPath, doc).toString()
                     json.push({
-                        text: $(this).text(),
+                        ptext: $(this).text(),
                         xpath: xPath,
-                        title : xPathText
+                        elementByXpath : xPathText
                     });
                 });
 
@@ -118,8 +118,7 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
         return JSON.parse(file);
         }
 
-        function getConfig(file){
-        var filepath = file;
+        function getConfig(filepath){
         return readJsonFileSync(filepath);
         }
 
