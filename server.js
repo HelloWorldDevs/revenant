@@ -38,6 +38,7 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser());
 
+app.use( '/ckeditor',  express.static(__dirname + '/ckeditor'));
 app.use('/assets', express.static(__dirname + '/public'));
 
 app.set('view engine', 'ejs');

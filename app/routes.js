@@ -122,8 +122,6 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
         return readJsonFileSync(filepath);
         }
 
-        //assume that config.json is in application root
-
         outputToJson = getConfig('output.json');
 
         res.send(outputToJson);

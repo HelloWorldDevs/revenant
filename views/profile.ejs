@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="/assets/style.css">
+    <script src="/ckeditor/ckeditor.js"></script>
     <style>
         body        { padding-top:80px; word-wrap:break-word; }
     </style>
@@ -36,39 +37,16 @@
 
     </div>
     <div class="row">
-      <div id="text-container" class="col-md-12">
-        <div>
-          <h2>Article 1</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-          <form action="/change" method="post" id="cms-form1">
-            <textarea name="name" form="cms-form1"></textarea>
-            <input class="btn btn-primary" type="submit" value="Submit" />
-          <form>
-        </div>
-        <div>
-          <h2>Article 2</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-          </p>
-          <form action="/change" method="post" id="cms-form2">
-            <textarea name="name" form="cms-form2"></textarea>
-            <input class="btn btn-primary" type="submit" value="Submit" />
-          <form>
-        </div>
-        <div>
-          <h2>Article 3</h2>
-          <p>
-            Lorem ipsum nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-          <form action="/change" method="post" id="cms-form3">
-            <textarea name="name" form="cms-form3"></textarea>
-            <input class="btn btn-primary" type="submit" value="Submit" />
-          <form>
-        </div>
-      </div>
-    </form>
+      <form>
+              <textarea name="editor1" id="editor1" rows="10" cols="80">
+                  This is my textarea to be replaced with CKEditor.
+              </textarea>
+              <script>
+                  // Replace the <textarea id="editor1"> with a CKEditor
+                  // instance, using default configuration.
+                  CKEDITOR.replace( 'editor1' );
+              </script>
+        </form>
   </div>
 
 
