@@ -15,11 +15,6 @@
         "elementByXpath": "<p class=\"edit-text\">OMSI began with the exhibition of Oregon’s rich natural resources with the opening of the City Hall Museum in 1906. <span style=\"font-size: 1rem; line-height: 1.38889rem;\">But with the Great Depression and World War II, it wasn’t until the mid-forties that support for the museum really began to grow. Businessman Ralph Lloyd hosted the temporary “Oregon Museum of Science and Industry” in his house on NE Hassalo Street, boasting the Northwest's first public planetarium and its 20-minute trip to the stars.</span></p>"
     },
     {
-        "ptext": "",
-        "xpath": "/html/body/div[2]/div/div[2]/main/div[2]/div/div/div/div/div/div[4]/div/div/div/div/div/p[2]",
-        "elementByXpath": "<p class=\"edit-text\"><img class=\"img-responsive\" alt=\"OMSIs Original Washington Park Location\" src=\"https://www.omsi.edu/sites/all/FTP/images/Everyone/Planetarium/planetarium_history-3_350x260.jpg\" style=\"margin-right: 20px; margin-bottom: 20px; font-family: 'Forza A', 'Forza B', Helvetica, Arial, sans-serif; font-style: normal; font-variant: normal; line-height: 25.0000190734863px; font-size: 18px; width: 350px; height: 260px; float: left;\"/></p>"
-    },
-    {
         "ptext": "With annual attendance swelling to over 25,000 in 1955 and the house scheduled for demolition, the City Council stepped forward to lease land in Washington Park to OMSI for the sum of one dollar per year. In the spirit of pioneer barn-raisings, over 400 volunteer union brick layers and hod carriers laid 102,000 bricks in one day, and on June 7, 1958, the dream of a dedicated, hands-on science museum became a reality.",
         "xpath": "/html/body/div[2]/div/div[2]/main/div[2]/div/div/div/div/div/div[4]/div/div/div/div/div/p[3]",
         "elementByXpath": "<p class=\"edit-text\">With annual attendance swelling to over 25,000 in 1955 and the house scheduled for demolition, the City Council stepped forward to lease land in Washington Park to OMSI for the sum of one dollar per year. In the spirit of pioneer barn-raisings, over 400 volunteer union brick layers and hod carriers laid 102,000 bricks in one day, and on June 7, 1958, the dream of a dedicated, hands-on science museum became a reality.</p>"

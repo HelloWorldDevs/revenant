@@ -3,6 +3,16 @@
 module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
 
     app.get('/', function(req, res) {
+    //   request('http://www.omsi.edu/history-and-mission', function (error, response, body) {
+    //     if (error){
+    //       console.log(error);
+    //     }
+    //     if (!error){
+    //       console.log(body);
+    //       var $ = cheerio.load(body);
+    //       fs.writeFile('omsi-mission-backup.ejs', $.html());
+    //     }
+    // });
         res.render('index.ejs'); // load the index.ejs file
     });
 
@@ -54,100 +64,77 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
     });
 
     app.get('/page', function(req, res) {
-      var page = 'views/omsi-mission.ejs';
-        //  request url
-        var url = 'http://www.omsi.edu/press';
-        request(url, function(error, response, body) {
-            if (error) {
-                console.log(error);
-            }
+      var pageToLoad = 'views/omsi-mission-backup.ejs';
+      var pageToWrite = 'views/omsi-mission.ejs';
 
-            if (!error) {
-              //  load cheerio
-              var $ = cheerio.load(fs.readFileSync(page));
-                // var $ = cheerio.load(body, {
-                //     normalizeWhitespace: true
-                // });
+      var $ = cheerio.load(fs.readFileSync(pageToLoad));
 
-                //  get xpath function
-                function getXPath(element) {
-                    var xpath = '';
-                    //  loop walks up dom tree for all nodes
-                    for (; element && element.nodeType == 1; element = element.parentNode) {
-                        // gets the element node index for each element
-                        var id = $(element.parentNode).children(element.tagName).index(element) + 1;
-                        // if greateer than one puts in brackets
-                        id > 1 ? (id = '[' + id + ']') : (id = '');
-                        // prepends to the element tagname and id to the xpath
-                        xpath = '/' + element.tagName.toLowerCase() + id + xpath;
-                    }
-                    return xpath;
-                }
-                if($('head script[src="' + '//cdn.ckeditor.com/4.5.9/standard/ckeditor.js' + '"]').length > 0) {
-                  console.log('CKEditor CDN already added!');
-                } else {
-                  $('head').append('<script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>');
-                }
-                if($('head link[href="' + '/assets/style.css' + '"]').length > 0) {
-                  console.log('custom stylesheet already added')
-                } else {
-                  $('head').append('<link rel="stylesheet" href="/assets/style.css">')
-                }
+      // append needed script tags to page.
+      if ($('head script[src="' + '//cdn.ckeditor.com/4.5.9/standard/ckeditor.js' + '"]').length > 0) {
+        console.log('CKEditor CDN already added!');
+      } else {
+        $('head').append('<script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>');
+      }
+      if ($('head link[href="' + '/assets/style.css' + '"]').length > 0) {
+        console.log('custom stylesheet already added');
+      } else {
+        $('head').append('<link rel="stylesheet" href="/assets/style.css">');
+      }
 
+      //  get xpath function
+      function getXPath(element) {
+          var xpath = '';
+          //  loop walks up dom tree for all nodes
+          for (; element && element.nodeType == 1; element = element.parentNode) {
+              // gets the element node index for each element
+              var id = $(element.parentNode).children(element.tagName).index(element) + 1;
+              // if greateer than one puts in brackets
+              id > 1 ? (id = '[' + id + ']') : (id = '');
+              // prepends to the element tagname and id to the xpath
+              xpath = '/' + element.tagName.toLowerCase() + id + xpath;
+          }
+          return xpath;
+      }
 
-                // parse cheerio html to xml to get element by xpath
-                var xml = $.xml();
-                var doc = new dom().parseFromString(xml);
+      // parse cheerio html to xml to get element by xpath
+      var xml = $.xml();
+      var doc = new dom().parseFromString(xml);
 
-                //  grab page text and use lodash uniq filter to eliminate duplicates
-                var $pageText = $('p');
-                _.uniq($pageText);
+      //  grab page text and use lodash uniq filter to eliminate duplicates
+      var $pageText = $('p');
+      _.uniq($pageText);
 
-                //  store xpath in array
-                var json = [];
-                $pageText.each(function(index, element) {
-                    $(this).addClass('edit-text');
-                    var xPath = getXPath(element);
-                    var xPathText = xpath.select(xPath, doc)[0].toString()
-                    json.push({
-                        ptext: $(this).text(),
-                        xpath: xPath,
-                        elementByXpath : xPathText
-                    });
-                });
-                fs.writeFile('views/omsi-mission.ejs', $.html() , function(error){
-                  if (error) {
-                    console.log(error);
-                  }
-                })
-                //  write json to output.json
-                fs.writeFile('output.json', JSON.stringify(json, null, 4), function(error) {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        console.log('File successfully written! - Check your project directory for the output.json file');
-                    }
-                });
-            }
-        });
-
-        //  to send json data back from server.
-        function readJsonFileSync(filepath, encoding){
-        if (typeof (encoding) == 'undefined'){
-            encoding = 'utf8';
+      //  store xpath in array
+      var json = [];
+      $pageText.each(function(index, element) {
+        if ($(this).text().length > 1){
+        // console.log($(this).text());
+          $(this).addClass('edit-text');
+          var xPath = getXPath(element);
+          var xPathText = xpath.select(xPath, doc)[0].toString();
+          json.push({
+              ptext: $(this).text(),
+              xpath: xPath,
+              elementByXpath : xPathText
+          });
         }
-        var file = fs.readFileSync(filepath, encoding);
-        return JSON.parse(file);
+      });
+
+      res.render('omsi-mission.ejs');
+
+      fs.writeFile(pageToWrite, $.html() , function(error){
+        if (error) {
+          console.log(error);
         }
-
-        function getConfig(filepath){
-        return readJsonFileSync(filepath);
-        }
-
-        var outputToJson = getConfig('output.json');
-
-        res.render('omsi-mission.ejs');
-    });
+      });
+      fs.writeFile('output.json', JSON.stringify(json, null, 4), function(error) {
+          if (error) {
+              console.log(error);
+          } else {
+              console.log('File successfully written! - Check your project directory for the output.json file');
+          }
+      });
+  });
 };
 
 // route middleware to make sure a user is logged in
