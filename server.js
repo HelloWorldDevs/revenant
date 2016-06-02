@@ -40,6 +40,7 @@ app.use(bodyParser());
 
 app.use( '/ckeditor',  express.static(__dirname + '/ckeditor'));
 app.use('/assets', express.static(__dirname + '/public'));
+app.use('/scripts', express.static(__dirname + '/js'));
 
 app.set('view engine', 'ejs');
 app.use(session({ secret: 'ilovescotchscotchyscotchscotch' }));

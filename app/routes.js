@@ -10,7 +10,9 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
     //     if (!error){
     //       console.log(body);
     //       var $ = cheerio.load(body);
-    //       fs.writeFile('omsi-mission-backup.ejs', $.html());
+    //       fs.writeFile('views/omsi-mission-backup.ejs', $.html(), function(error){
+    //           console.log(error);
+    //       });
     //     }
     // });
         res.render('index.ejs'); // load the index.ejs file
@@ -64,22 +66,32 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
     });
 
     app.get('/page', function(req, res) {
-      var pageToLoad = 'views/omsi-mission-backup.ejs';
-      var pageToWrite = 'views/omsi-mission.ejs';
+      // var pageToLoad = 'views/omsi-mission-backup.ejs';
+      // var pageToWrite = 'views/omsi-mission.ejs';
 
-      var $ = cheerio.load(fs.readFileSync(pageToLoad));
+      var $ = cheerio.load(fs.readFileSync('./views/omsi-mission-backup.ejs'));
+      // console.log($.html());
 
-      // append needed script tags to page.
-      if ($('head script[src="' + '//cdn.ckeditor.com/4.5.9/standard/ckeditor.js' + '"]').length > 0) {
-        console.log('CKEditor CDN already added!');
-      } else {
-        $('head').append('<script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>');
+      // append needed style and script tags to page.
+      function addScripts(){
+        if ($('head link[href="' + '/assets/style.css' + '"]').length > 0) {
+          console.log('custom stylesheet already added');
+        } else {
+          $('head').append('<link rel="stylesheet" href="/assets/style.css">');
+        }
+        if ($('head script[src="' + '//cdn.ckeditor.com/4.5.9/standard/ckeditor.js' + '"]').length > 0) {
+          console.log('CKEditor CDN already added!');
+        } else {
+          $('head').append('<script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>');
+        }
+        // if ($('head script[src="' + '/scripts/editor.js' + '"]').length > 0) {
+        //   console.log('Editor.js already added!');
+        // } else {
+        //   $('head').append('<script src="/scripts/editor.js"></script>');
+        // }
       }
-      if ($('head link[href="' + '/assets/style.css' + '"]').length > 0) {
-        console.log('custom stylesheet already added');
-      } else {
-        $('head').append('<link rel="stylesheet" href="/assets/style.css">');
-      }
+
+
 
       //  get xpath function
       function getXPath(element) {
@@ -122,7 +134,7 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
 
       res.render('omsi-mission.ejs');
 
-      fs.writeFile(pageToWrite, $.html() , function(error){
+      fs.writeFile('./views/omsi-mission.ejs', $.html() , function(error){
         if (error) {
           console.log(error);
         }
