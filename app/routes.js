@@ -46,59 +46,81 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
         res.redirect('/');
     });
 
-    app.post('/change', function(req, res) {
+    app.get('/change', function(req, res) {
         req.flash('info', 'Review your changes');
-        res.render('profile-changed.ejs', {
+        res.render('omsi-mission.ejs', {
             message: req.flash('info')
         });
     });
 
-    app.get('/data', function(req, res) {
-
-        //request url
-        var url = 'http://www.omsi.edu/history-and-mission';
+    app.get('/page', function(req, res) {
+      var page = 'views/omsi-mission.ejs';
+        //  request url
+        var url = 'http://www.omsi.edu/press';
         request(url, function(error, response, body) {
             if (error) {
                 console.log(error);
             }
-            if (!error) {
-              //load cheerio
-                var $ = cheerio.load(body, {
-                    normalizeWhitespace: true
-                });
 
-                //get xpath function
+            if (!error) {
+              //  load cheerio
+              var $ = cheerio.load(fs.readFileSync(page));
+                // var $ = cheerio.load(body, {
+                //     normalizeWhitespace: true
+                // });
+
+                //  get xpath function
                 function getXPath(element) {
                     var xpath = '';
+                    //  loop walks up dom tree for all nodes
                     for (; element && element.nodeType == 1; element = element.parentNode) {
+                        // gets the element node index for each element
                         var id = $(element.parentNode).children(element.tagName).index(element) + 1;
+                        // if greateer than one puts in brackets
                         id > 1 ? (id = '[' + id + ']') : (id = '');
+                        // prepends to the element tagname and id to the xpath
                         xpath = '/' + element.tagName.toLowerCase() + id + xpath;
                     }
                     return xpath;
                 }
+                if($('head script[src="' + '//cdn.ckeditor.com/4.5.9/standard/ckeditor.js' + '"]').length > 0) {
+                  console.log('CKEditor CDN already added!');
+                } else {
+                  $('head').append('<script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>');
+                }
+                if($('head link[href="' + '/assets/style.css' + '"]').length > 0) {
+                  console.log('custom stylesheet already added')
+                } else {
+                  $('head').append('<link rel="stylesheet" href="/assets/style.css">')
+                }
+
 
                 // parse cheerio html to xml to get element by xpath
                 var xml = $.xml();
                 var doc = new dom().parseFromString(xml);
 
-                //grab page text and use lodash uniq filter to eliminate duplicates
+                //  grab page text and use lodash uniq filter to eliminate duplicates
                 var $pageText = $('p');
                 _.uniq($pageText);
 
-                //store xpath in array
+                //  store xpath in array
                 var json = [];
                 $pageText.each(function(index, element) {
+                    $(this).addClass('edit-text');
                     var xPath = getXPath(element);
-                    var xPathText = xpath.select(xPath, doc).toString()
+                    var xPathText = xpath.select(xPath, doc)[0].toString()
                     json.push({
                         ptext: $(this).text(),
                         xpath: xPath,
                         elementByXpath : xPathText
                     });
                 });
-
-                //write json to output.json
+                fs.writeFile('views/omsi-mission.ejs', $.html() , function(error){
+                  if (error) {
+                    console.log(error);
+                  }
+                })
+                //  write json to output.json
                 fs.writeFile('output.json', JSON.stringify(json, null, 4), function(error) {
                     if (error) {
                         console.log(error);
@@ -108,8 +130,8 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
                 });
             }
         });
-        var outputToJson;
 
+        //  to send json data back from server.
         function readJsonFileSync(filepath, encoding){
         if (typeof (encoding) == 'undefined'){
             encoding = 'utf8';
@@ -122,9 +144,9 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
         return readJsonFileSync(filepath);
         }
 
-        outputToJson = getConfig('output.json');
+        var outputToJson = getConfig('output.json');
 
-        res.send(outputToJson);
+        res.render('omsi-mission.ejs');
     });
 };
 

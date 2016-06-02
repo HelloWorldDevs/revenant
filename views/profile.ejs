@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="/assets/style.css">
-    <script src="/ckeditor/ckeditor.js"></script>
+    <script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>
     <style>
         body        { padding-top:80px; word-wrap:break-word; }
     </style>
@@ -15,14 +15,22 @@
 <div class="container">
 
     <div class="page-header text-center">
-        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
+        <h1><span class="fa fa-flask"></span>Omsi Editor</h1>
         <a href="/logout" class="btn btn-default btn-sm">Logout</a>
     </div>
 
     <div class="row">
-
+      <div class="col-md-4 text-center">
+        <a href="/page" class="fa fa-flask well">Site 1</a>
+      </div>
+      <div class="col-md-4 text-center">
+        <a href="#" class="fa fa-flask well">Site 2</a>
+      </div>
+      <div class="col-md-4 text-center">
+        <a href="#" class="fa fa-flask well">Site 3</a>
+      </div>
         <!-- LOCAL INFORMATION -->
-        <div class="col-sm-6">
+        <!-- <div class="col-sm-6">
             <div class="well">
                 <h3><span class="fa fa-user"></span> Local</h3>
 
@@ -46,24 +54,23 @@
                   // instance, using default configuration.
                   CKEDITOR.replace( 'editor1' );
               </script>
-        </form>
+        </form> -->
   </div>
 
 
 </div>
 <script   src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>
 <script>
-$(document).ready(function() {
-
-  $.ajax({
-    type: 'GET',
-    url: '/data',
-    dataType: 'json',
-    async: false,
-    success: function(data){
-      console.log(data)
-    }
-  });
+// $(document).ready(function() {
+//   $.ajax({
+//     type: 'GET',
+//     url: '/data',
+//     dataType: 'json',
+//     async: false,
+//     success: function(data){
+//       console.log(data)
+//     }
+//   });
 
 
   // $('form').on('submit', function(e){
@@ -73,7 +80,7 @@ $(document).ready(function() {
   //   }
   // });
 
-});
+// });
 </script>
 </body>
 </html>
