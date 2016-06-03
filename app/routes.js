@@ -70,7 +70,7 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
       // var pageToWrite = 'views/omsi-mission.ejs';
 
       var $ = cheerio.load(fs.readFileSync('./views/omsi-mission-backup.ejs'));
-      // console.log($.html());
+      console.log($.html());
 
       // append needed style and script tags to page.
       function addScripts(){
@@ -84,12 +84,18 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
         } else {
           $('head').append('<script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>');
         }
-        // if ($('head script[src="' + '/scripts/editor.js' + '"]').length > 0) {
-        //   console.log('Editor.js already added!');
-        // } else {
-        //   $('head').append('<script src="/scripts/editor.js"></script>');
-        // }
+        if ($('body script[src="' + 'https://code.jquery.com/jquery-1.12.4.min.js' + '"]').length > 0) {
+          console.log('jquery already added!');
+        } else {
+          $('body').append('<script src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>');
+        }
+        if ($('body script[src="' + '/scripts/editor.js' + '"]').length > 0) {
+          console.log('Editor.js already added!');
+        } else {
+          $('body').append('<script src="/scripts/editor.js"></script>');
+        }
       }
+      addScripts();
 
 
 
