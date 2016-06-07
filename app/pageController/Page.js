@@ -28,10 +28,10 @@ module.exports = function(app, request, cheerio, fs, _, xpath, dom) {
       $('body').append('<script src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>');
       console.log('appended jquery');
     }
-    if ($('body script[src="' + '/scripts/editor.js' + '"]').length > 0) {
+    if ($('body script[src="' + '/scripts/pageController/pageView.js' + '"]').length > 0) {
       console.log('Editor.js already added!');
     } else {
-      $('body').append('<script src="/scripts/editor.js"></script>');
+      $('body').append('<script src="/scripts/pageController/pageView.js"></script>');
       console.log('appended scripts');
     }
   };

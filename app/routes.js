@@ -1,20 +1,8 @@
 
 
-module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom, Page) {
+module.exports = function(app, passport, Page) {
 
     app.get('/', function(req, res) {
-    //   request('http://www.omsi.edu/history-and-mission', function (error, response, body) {
-    //     if (error){
-    //       console.log(error);
-    //     }
-    //     if (!error){
-    //       console.log(body);
-    //       var $ = cheerio.load(body);
-    //       fs.writeFile('views/omsi-mission-backup.ejs', $.html(), function(error){
-    //           console.log(error);
-    //       });
-    //     }
-    // });
         res.render('index.ejs'); // load the index.ejs file
     });
 
@@ -34,7 +22,7 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom, Pa
     });
 
     app.post('/signup', passport.authenticate('local-signup', {
-        successRedirect: '/profile', // redirect to the secure profile section
+        successRedirect: '/pagesView', // redirect to the secure profile section
         failureRedirect: '/signup', // redirect back to the signup page if there is an error
         failureFlash: true // allow flash messages
     }));
@@ -42,13 +30,13 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom, Pa
     // process the login form
     // app.post('/login', do all our passport stuff here);
     app.post('/login', passport.authenticate('local-login', {
-        successRedirect: '/profile', // redirect to the secure profile section
+        successRedirect: '/pagesView', // redirect to the secure profile section
         failureRedirect: '/login', // redirect back to the signup page if there is an error
         failureFlash: true // allow flash messages
     }));
 
-    app.get('/profile', isLoggedIn, function(req, res) {
-        res.render('profile.ejs', {
+    app.get('/pagesView', isLoggedIn, function(req, res) {
+        res.render('pagesView.ejs', {
             user: req.user // get the user out of session and pass to template
         });
     });

@@ -22,7 +22,9 @@ var dom         = require('xmldom').DOMParser;
 
 
 var configDB = require('./config/database.js');
-var Page = require('./app/Page')(app, request, cheerio, fs, _, xpath, dom);
+
+
+
 
 mongoose.connect(configDB.url , function (error) {
   if (error){
@@ -38,9 +40,8 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser());
 
-app.use( '/ckeditor',  express.static(__dirname + '/ckeditor'));
 app.use('/assets', express.static(__dirname + '/public'));
-app.use('/scripts', express.static(__dirname + '/js'));
+app.use('/scripts', express.static(__dirname + '/app'));
 
 app.set('view engine', 'ejs');
 app.use(session({ secret: 'ilovescotchscotchyscotchscotch' }));
@@ -49,7 +50,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-require('./app/routes.js')(app, passport, request, cheerio, fs, _ , xpath, dom, Page);
+var Page = require('./app/pageController/Page')(app, request, cheerio, fs, _, xpath, dom);
+require('./app/routes.js')(app, passport, Page);
 
 app.listen(port);
 console.log('The magic happens on port ' + port);
