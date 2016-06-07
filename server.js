@@ -22,7 +22,7 @@ var dom         = require('xmldom').DOMParser;
 
 
 var configDB = require('./config/database.js');
-
+var Page = require('./app/Page')(app, request, cheerio, fs, _, xpath, dom);
 
 mongoose.connect(configDB.url , function (error) {
   if (error){
@@ -49,7 +49,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-require('./app/routes.js')(app, passport, request, cheerio, fs, _ , xpath, dom );
+require('./app/routes.js')(app, passport, request, cheerio, fs, _ , xpath, dom, Page);
 
 app.listen(port);
 console.log('The magic happens on port ' + port);

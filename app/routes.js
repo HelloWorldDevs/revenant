@@ -1,6 +1,6 @@
 
 
-module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
+module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom, Page) {
 
     app.get('/', function(req, res) {
     //   request('http://www.omsi.edu/history-and-mission', function (error, response, body) {
@@ -66,92 +66,11 @@ module.exports = function(app, passport, request, cheerio, fs, _, xpath, dom) {
     });
 
     app.get('/page', function(req, res) {
-      // var pageToLoad = 'views/omsi-mission-backup.ejs';
-      // var pageToWrite = 'views/omsi-mission.ejs';
-
-      var $ = cheerio.load(fs.readFileSync('./views/omsi-mission-backup.ejs'));
-      console.log($.html());
-
-      // append needed style and script tags to page.
-      function addScripts(){
-        if ($('head link[href="' + '/assets/style.css' + '"]').length > 0) {
-          console.log('custom stylesheet already added');
-        } else {
-          $('head').append('<link rel="stylesheet" href="/assets/style.css">');
-        }
-        if ($('head script[src="' + '//cdn.ckeditor.com/4.5.9/standard/ckeditor.js' + '"]').length > 0) {
-          console.log('CKEditor CDN already added!');
-        } else {
-          $('head').append('<script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>');
-        }
-        if ($('body script[src="' + 'https://code.jquery.com/jquery-1.12.4.min.js' + '"]').length > 0) {
-          console.log('jquery already added!');
-        } else {
-          $('body').append('<script src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>');
-        }
-        if ($('body script[src="' + '/scripts/editor.js' + '"]').length > 0) {
-          console.log('Editor.js already added!');
-        } else {
-          $('body').append('<script src="/scripts/editor.js"></script>');
-        }
-      }
-      addScripts();
-
-
-
-      //  get xpath function
-      function getXPath(element) {
-          var xpath = '';
-          //  loop walks up dom tree for all nodes
-          for (; element && element.nodeType == 1; element = element.parentNode) {
-              // gets the element node index for each element
-              var id = $(element.parentNode).children(element.tagName).index(element) + 1;
-              // if greateer than one puts in brackets
-              id > 1 ? (id = '[' + id + ']') : (id = '');
-              // prepends to the element tagname and id to the xpath
-              xpath = '/' + element.tagName.toLowerCase() + id + xpath;
-          }
-          return xpath;
-      }
-
-      // parse cheerio html to xml to get element by xpath
-      var xml = $.xml();
-      var doc = new dom().parseFromString(xml);
-
-      //  grab page text and use lodash uniq filter to eliminate duplicates
-      var $pageText = $('p');
-      _.uniq($pageText);
-
-      //  store xpath in array
-      var json = [];
-      $pageText.each(function(index, element) {
-        if ($(this).text().length > 1){
-        // console.log($(this).text());
-          $(this).addClass('edit-text');
-          var xPath = getXPath(element);
-          var xPathText = xpath.select(xPath, doc)[0].toString();
-          json.push({
-              ptext: $(this).text(),
-              xpath: xPath,
-              elementByXpath : xPathText
-          });
-        }
-      });
-
+      Page.loadPage('./views/omsi-mission-backup.ejs');
+      Page.addScripts();
+      Page.writeJson();
+      Page.writeToPage('./views/omsi-mission.ejs', 'output.json' );
       res.render('omsi-mission.ejs');
-
-      fs.writeFile('./views/omsi-mission.ejs', $.html() , function(error){
-        if (error) {
-          console.log(error);
-        }
-      });
-      fs.writeFile('output.json', JSON.stringify(json, null, 4), function(error) {
-          if (error) {
-              console.log(error);
-          } else {
-              console.log('File successfully written! - Check your project directory for the output.json file');
-          }
-      });
   });
 };
 
