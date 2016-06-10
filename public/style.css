@@ -3,9 +3,36 @@ textarea {
   width: 100%;
 }
 
-.edit-text:hover{
+.btn--edit {
+  margin: 0 0 0 auto;
+  height: 2em;
+  width: 5rem;
+  border: 1px solid rgba(81, 203, 238, 1);
+  border-radius: .3rem;
+  line-height: 2em;
+  text-align: center;
+}
+
+.text--edit {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(81, 203, 238, 1);
+  -webkit-transition : border 500ms ease-out;
+  -moz-transition : border 500ms ease-out;
+  -o-transition : border 500ms ease-out;
+  transition : border 500ms ease-out;
+}
+
+.text--edit:hover{
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-padding: 3px 0px 3px 3px;
-margin: 5px 1px 3px 0px;
-border: 1px solid rgba(81, 203, 238, 1);
+  padding: 1rem;
+  margin: 1rem;
+  border: 1px solid rgba(81, 203, 238, 1);
+  border-radius: 1rem;
+  cursor: pointer;
 }

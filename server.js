@@ -1,6 +1,5 @@
 var express  = require('express');
 var app      = express();
-var fs       = require('fs');
 var port     = process.env.PORT || 8080;
 var mongoose = require('mongoose');
 var passport = require('passport');
@@ -14,14 +13,16 @@ var bodyParser   = require('body-parser');
 var session      = require('express-session');
 var flash       = require('connect-flash');
 var request     = require('request');
-var cheerio     = require('cheerio');
-var _           = require('lodash');
-var xpath       = require('xpath');
-var dom         = require('xmldom').DOMParser;
+
 
 
 
 var configDB = require('./config/database.js');
+
+// My exports
+var page = require('./app/page/Page');
+var myRoutes = require('./app/routes.js');
+var myPassport = require('./config/passport');
 
 
 
@@ -34,7 +35,9 @@ mongoose.connect(configDB.url , function (error) {
   }
 });
 
-require('./config/passport')(passport); // pass passport for configuration
+
+
+myPassport(passport); // pass passport for configuration
 
 app.use(morgan('dev'));
 app.use(cookieParser());
@@ -50,8 +53,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-var Page = require('./app/pageController/Page')(app, request, cheerio, fs, _, xpath, dom);
-require('./app/routes.js')(app, passport, Page);
+
+
+var Page = page;
+myRoutes(app, passport, Page);
 
 app.listen(port);
 console.log('The magic happens on port ' + port);
