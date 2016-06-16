@@ -4,15 +4,13 @@ var _  = require('lodash');
 var xpath = require('xpath');
 var dom  = require('xmldom').DOMParser;
 
-
+//vars for testjson and cheerio
 var $;
+var json = [];
 
-loadPage = function(pageFile) {
-  $ = cheerio.load(fs.readFileSync(pageFile));
-};
 
-addScripts = function() {
-  // console.log($.html());
+//Functions called for page modification before load.
+var addPageScripts = function(next) {
   $('body').append('HELLO!');
   if ($('head link[href="' + '/assets/style.css' + '"]').length > 0) {
       console.log('custom stylesheet already added');
@@ -40,7 +38,8 @@ addScripts = function() {
   }
 };
 
-getXPath = function(element) {
+
+var getXPath = function(element) {
   var xpath = '';
   //  loop walks up dom tree for all nodes
   for (; element && element.nodeType == 1; element = element.parentNode) {
@@ -54,42 +53,70 @@ getXPath = function(element) {
   return xpath;
 };
 
-var json = []
-
-writeJson = function() {
-  var xml = $.xml();
-  var doc = new dom().parseFromString(xml);
-
-  //  grab page text and use lodash uniq filter to eliminate duplicates
+//add xpath data-category to selected elements.
+var addTextClasses = function(){
   var $pageText = $('p');
   _.uniq($pageText);
-
-  //  store xpath in array
   $pageText.each(function(index, element) {
       if ($(this).text().length > 1) {
           var xPath = getXPath(element);
-          var xPathText = xpath.select(xPath, doc)[0].toString();
-
-          json.push({
-              ptext: $(this).text(),
-              xpath: xPath,
-              elementByXpath: xPathText
-          });
           $(this).addClass('text--edit');
           $(this).attr('data-category', xPath);
       }
   });
 };
 
-writeToPage = function(pageFile, jsonFile) {
-  fs.writeFileSync(pageFile, $.html());
-  fs.writeFileSync(jsonFile, JSON.stringify(json, null, 4));
+//for testing getXPath and getting element by xpath
+var writeTestJson = function() {
+  var xml = $.xml();
+  var doc = new dom().parseFromString(xml);
+  var $pageText = $('p');
+  _.uniq($pageText);
+  //  store xpath in array
+  $pageText.each(function(index, element) {
+      if ($(this).text().length > 1) {
+          var xPath = getXPath(element);
+          var xPathText = xpath.select(xPath, doc)[0].toString();
+          json.push({
+              ptext: $(this).text(),
+              xpath: xPath,
+              elementByXpath: xPathText
+          });
+      }
+  });
 };
 
+
+//functions called in pageInit. Next is passed through three functions.
+var loadPageFirst = function(pageFile , callback, next) {
+  fs.readFile(pageFile , function(err, data){
+    $ = cheerio.load(data);
+    callback(next);
+  });
+  console.log('inside loadPage');
+};
+
+var writeAll = function(next){
+  addPageScripts();
+  writeTestJson();
+  addTextClasses();
+  writePageFile('./views/omsi-mission.ejs', 'output.json', next);
+};
+
+var writePageFile = function(pageFile, jsonFile, next) {
+  fs.writeFile(pageFile, $.html(), function(){
+    fs.writeFile(jsonFile, JSON.stringify(json, null, 4), function(){
+      next();
+    });
+  });
+};
+
+//page init middleware to handle async file writing before page render. Passes next to last function called
+ var pageInit = function(request, response, next){
+  loadPageFirst('./views/omsi-mission-backup.ejs', writeAll, next);
+}
+
+
 module.exports = {
-  loadPage : loadPage,
-  addScripts: addScripts,
-  getXPath : getXPath,
-  writeJson : writeJson,
-  writeToPage : writeToPage
+  pageInit: pageInit
 };

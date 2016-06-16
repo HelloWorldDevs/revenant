@@ -1,4 +1,5 @@
 (function(){
+
   var pageController = {};
 
   pageController.editButton = function() {
@@ -11,7 +12,7 @@
     })
     .on('mouseleave', function(){
       $(this).find('.btn--edit').fadeOut();
-    })
+    });
   }
 
   pageController.edit = function() {
@@ -21,11 +22,11 @@
       var editorTextarea = $('<textarea name="'+ dataCategory +'" id="editor1" rows="10" cols="80">' + text + '</textarea>');
       $(this).after(editorTextarea);
       $(this).remove();
-      CKEDITOR.replace(dataCategory);
+      CKEDITOR.replace(dataCategory , {
+        bodyId : dataCategory
+      });
     });
   };
-
-
 
   pageController.init = function(){
     pageController.edit();
@@ -34,4 +35,4 @@
 
   pageController.init();
 
-})()
+})();

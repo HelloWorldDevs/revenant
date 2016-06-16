@@ -14,7 +14,6 @@ module.exports = function(app, passport, Page) {
     });
 
     app.get('/signup', function(req, res) {
-
         // render the page and pass in any flash data if it exists
         res.render('signup.ejs', {
             message: req.flash('signupMessage')
@@ -46,19 +45,17 @@ module.exports = function(app, passport, Page) {
         res.redirect('/');
     });
 
-    app.get('/change', function(req, res) {
-        req.flash('info', 'Review your changes');
-        res.render('omsi-mission.ejs', {
-            message: req.flash('info')
-        });
-    });
+    app.get('/page', Page.pageInit, function(req, res, next) {
+      // Page.loadPage('./views/omsi-mission-backup.ejs');
+      // Page.addScripts();
+      // Page.writeJson();
+      // Page.writeToPage('./views/omsi-mission.ejs', 'output.json' );
 
-    app.get('/page', function(req, res) {
-      Page.loadPage('./views/omsi-mission-backup.ejs');
-      Page.addScripts();
-      Page.writeJson();
-      Page.writeToPage('./views/omsi-mission.ejs', 'output.json' );
-      res.render('omsi-mission.ejs');
+      res.render('omsi-mission.ejs', function(err, html){
+        res.send(html);
+        console.log('pageInit Finished');
+      });
+
   });
 };
 
