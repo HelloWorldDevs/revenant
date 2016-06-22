@@ -30,11 +30,20 @@ var addPageScripts = function(next) {
       $('body').append('<script src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>');
       console.log('appended jquery');
   }
+  if( $('body script[src="' + 'https://cdn.jsdelivr.net/lodash/4.13.1/lodash.min.js' + '"]').length > 0){
+    console.log('lodash already added!');
+  } else{
+    $('body').append('<script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.min.js"></script>');
+    console.log('appended lodash');
+  }
+
   if ($('body script[src="' + '/scripts/page/pageController.js' + '"]').length > 0) {
       console.log('Editor.js already added!');
   } else {
       $('body').append('<script src="/scripts/page/pageController.js"></script>');
       console.log('appended scripts');
+      $('body').append('<script> pageControllerModule.init(); </script>');
+      console.log('appended pageControllerInit');
   }
 };
 
@@ -99,7 +108,7 @@ var loadPageFirst = function(pageFile , callback, next) {
 var writeAll = function(next){
   addPageScripts();
   writeTestJson();
-  addTextClasses();
+  // addTextClasses();
   writePageFile('./views/omsi-mission.ejs', 'output.json', next);
 };
 

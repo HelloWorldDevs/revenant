@@ -1,6 +1,6 @@
 var express  = require('express');
 var app      = express();
-var port     = process.env.PORT || 3000;
+var port     = process.env.PORT || 8080;
 var mongoose = require('mongoose');
 var passport = require('passport');
 
@@ -15,16 +15,12 @@ var flash       = require('connect-flash');
 var request     = require('request');
 
 
-
-
 var configDB = require('./config/database.js');
 
 // My exports
 var page = require('./app/page/Page');
 var myRoutes = require('./app/routes.js');
 var myPassport = require('./config/passport');
-
-
 
 
 mongoose.connect(configDB.url , function (error) {
@@ -34,7 +30,6 @@ mongoose.connect(configDB.url , function (error) {
    console.log('Connected to Mongo');
   }
 });
-
 
 
 myPassport(passport); // pass passport for configuration
@@ -52,7 +47,6 @@ app.use(session({ secret: 'ilovescotchscotchyscotchscotch' }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-
 
 
 var Page = page;

@@ -5,7 +5,8 @@ textarea {
 
 .btn--edit {
   margin: 0 0 0 auto;
-  height: 2em;
+  height: 2rem;
+  font-size: 2rem;
   width: 5rem;
   border: 1px solid rgba(81, 203, 238, 1);
   border-radius: .3rem;

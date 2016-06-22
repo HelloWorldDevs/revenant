@@ -45,12 +45,7 @@ module.exports = function(app, passport, Page) {
         res.redirect('/');
     });
 
-    app.get('/page', Page.pageInit, function(req, res, next) {
-      // Page.loadPage('./views/omsi-mission-backup.ejs');
-      // Page.addScripts();
-      // Page.writeJson();
-      // Page.writeToPage('./views/omsi-mission.ejs', 'output.json' );
-
+    app.get('/page', function(req, res, next) {
       res.render('omsi-mission.ejs', function(err, html){
         res.send(html);
         console.log('pageInit Finished');
