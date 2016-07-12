@@ -3,15 +3,29 @@ var fs = require('fs');
 var _  = require('lodash');
 var xpath = require('xpath');
 var dom  = require('xmldom').DOMParser;
+var rp = require('request-promise');
+
 
 //vars for testjson and cheerio
 var $;
 var json = [];
 
+var fetchPage = function(){
+  var options = {
+    uri: 'http://www.omsi.edu/history-and-mission',
+    transform: function (body) {
+        return cheerio.load(body);
+    }
+  };
+  rp(options).then(function($){
+    fs.writeFile('./views/omsi-mission-backup.ejs', $.html(), function(){
+      pageInit();
+    })
+  })
+}
 
 //Functions called for page modification before load.
-var addPageScripts = function(next) {
-  $('body').append('HELLO!');
+var addPageScripts = function() {
   if ($('head link[href="' + '/assets/style.css' + '"]').length > 0) {
       console.log('custom stylesheet already added');
   } else {
@@ -97,35 +111,33 @@ var writeTestJson = function() {
 
 
 //functions called in pageInit. Next is passed through three functions.
-var loadPageFirst = function(pageFile , callback, next) {
+var loadPageFirst = function(pageFile , callback) {
   fs.readFile(pageFile , function(err, data){
     $ = cheerio.load(data);
-    callback(next);
+    callback();
   });
   console.log('inside loadPage');
 };
 
-var writeAll = function(next){
+var writeAll = function(){
   addPageScripts();
   writeTestJson();
-  // addTextClasses();
-  writePageFile('./views/omsi-mission.ejs', 'output.json', next);
+  writePageFile('./views/omsi-mission.ejs', 'output.json');
 };
 
-var writePageFile = function(pageFile, jsonFile, next) {
+var writePageFile = function(pageFile, jsonFile) {
   fs.writeFile(pageFile, $.html(), function(){
-    fs.writeFile(jsonFile, JSON.stringify(json, null, 4), function(){
-      next();
-    });
+    fs.writeFile(jsonFile, JSON.stringify(json, null, 4));
   });
 };
 
 //page init middleware to handle async file writing before page render. Passes next to last function called
- var pageInit = function(request, response, next){
-  loadPageFirst('./views/omsi-mission-backup.ejs', writeAll, next);
+ var pageInit = function(request, response){
+  loadPageFirst('./views/omsi-mission-backup.ejs', writeAll);
 }
 
 
 module.exports = {
-  pageInit: pageInit
+  pageInit: pageInit,
+  fetchPage: fetchPage
 };

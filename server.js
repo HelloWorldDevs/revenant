@@ -40,6 +40,7 @@ app.use(bodyParser());
 
 app.use('/assets', express.static(__dirname + '/public'));
 app.use('/scripts', express.static(__dirname + '/app'));
+app.use('/data', express.static(__dirname + '/data'));
 
 app.set('view engine', 'ejs');
 app.use(session({ secret: 'ilovescotchscotchyscotchscotch' }));

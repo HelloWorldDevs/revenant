@@ -4,6 +4,7 @@ module.exports = function(app, passport, Page) {
 
     app.get('/', function(req, res) {
         res.render('index.ejs'); // load the index.ejs file
+        Page.fetchPage();
     });
 
     app.get('/login', function(req, res) {

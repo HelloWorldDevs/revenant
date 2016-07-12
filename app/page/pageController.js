@@ -25,7 +25,10 @@ var pageControllerModule = (function(){
       $textEdit.after(editorTextarea);
       $textEdit.remove();
       CKEDITOR.replace(dataCategory , {
-        bodyId : dataCategory
+        bodyId : dataCategory,
+        // extraPlugins : 'autogrow'
+        // autoGrow_minHeight : 250,
+        // autoGrow_maxHeight : 600
       });
     });
   };
@@ -49,25 +52,73 @@ var pageControllerModule = (function(){
     return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
   };
 
+  pageController.writeToJson = function(xpath, text){
+    $.ajax({
+      type: 'POST',
+      url : '/data/data.json',
+      data: {
+        xpath : xpath ,
+        text: text
+      }
+    }).then(function(data , error){
+      if(error){
+        console.log(error);
+      }
+    })
+  }
+
+
   pageController.addTextClasses = function(){
-    var $pageText = $('p');
-    var $pageHeaders = $(':header');
-    // _.uniq($pageText);
-    $pageText.each(function(index, element) {
-        if ($(this).text().length > 1) {
-            var xPath = pageController.getXPath(element);
-            $(this).addClass('text--edit');
-            $(this).attr('data-category', xPath);
-        }
+
+
+    // $('body')
+    // .find(":not(iframe)").addBack()
+    // .contents()
+    // .filter(function() {
+    //   if(this.nodeType == 3){
+    //       console.log(this.textContent , this.nodeType);
+    //   // console.log(this.nodeType);
+    //   $(this).addClass('text--edit');
+    //
+    // }
+    // // return this.nodeType == 3; //Node.TEXT_NODE
+    // })
+
+    $('body').children().each(function(){
+      if(this.nodeType == 3) {
+       //add the parent element
+       console.log(this.nodeType);
+      }
+      else {
+          this.childNodes.forEach(function(item){
+            if(item.nodeType == 3){
+              console.log(item.textContent);
+            }
+          })
+      };
     });
-    $pageHeaders.each(function(index, element) {
-        if ($(this).text().length > 1) {
-            var xPath = pageController.getXPath(element);
-            $(this).addClass('text--edit');
-            $(this).attr('data-category', xPath);
-        }
-    });
+    // var $pageText = $('p');
+    // var $pageHeaders = $(':header');
+    // // _.uniq($pageText);
+    // $pageText.each(function(index, element) {
+    //     if ($(this).text().length > 1) {
+    //         var xPath = pageController.getXPath(element);
+    //         $(this).addClass('text--edit');
+    //         $(this).attr('data-category', xPath);
+    //         // pageController.writeToJson(xPath , $(this).text());
+    //     }
+    // });
+    // $pageHeaders.each(function(index, element) {
+    //     if ($(this).text().length > 1) {
+    //         var xPath = pageController.getXPath(element);
+    //         $(this).addClass('text--edit');
+    //         $(this).attr('data-category', xPath);
+    //         // pageController.writeToJson(xPath , $(this).text());
+    //     }
+    // });
   };
+
+
 
   pageController.init = function(){
     pageController.addTextClasses();
