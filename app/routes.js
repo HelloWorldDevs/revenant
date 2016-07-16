@@ -1,6 +1,6 @@
 
 
-module.exports = function(app, passport, Page) {
+module.exports = function(app, passport, Page, fs) {
 
     app.get('/', function(req, res) {
         res.render('index.ejs'); // load the index.ejs file
@@ -51,8 +51,15 @@ module.exports = function(app, passport, Page) {
         res.send(html);
         console.log('pageInit Finished');
       });
-
   });
+
+    app.post('/data', function(req, res){
+      // console.log(JSON.stringify(req.body));
+      var json = JSON.stringify(req.body);
+      fs.writeFile('./data/data.json', json);
+      res.send('good job');
+    })
+
 };
 
 // route middleware to make sure a user is logged in

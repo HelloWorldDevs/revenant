@@ -1,5 +1,6 @@
 var express  = require('express');
 var app      = express();
+var fs       = require('fs');
 var port     = process.env.PORT || 8080;
 var mongoose = require('mongoose');
 var passport = require('passport');
@@ -18,7 +19,7 @@ var request     = require('request');
 var configDB = require('./config/database.js');
 
 // My exports
-var page = require('./app/page/Page');
+var page = require('./app/page/page');
 var myRoutes = require('./app/routes.js');
 var myPassport = require('./config/passport');
 
@@ -36,11 +37,14 @@ myPassport(passport); // pass passport for configuration
 
 app.use(morgan('dev'));
 app.use(cookieParser());
-app.use(bodyParser());
+
+
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 app.use('/assets', express.static(__dirname + '/public'));
 app.use('/scripts', express.static(__dirname + '/app'));
-app.use('/data', express.static(__dirname + '/data'));
+// app.use('/data', express.static(__dirname + '/data'));
 
 app.set('view engine', 'ejs');
 app.use(session({ secret: 'ilovescotchscotchyscotchscotch' }));
@@ -50,8 +54,8 @@ app.use(passport.session());
 app.use(flash());
 
 
-var Page = page;
-myRoutes(app, passport, Page);
+
+myRoutes(app, passport, page, fs);
 
 app.listen(port);
 console.log('The magic happens on port ' + port);
