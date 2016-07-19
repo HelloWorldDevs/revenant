@@ -44,7 +44,7 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 app.use('/assets', express.static(__dirname + '/public'));
 app.use('/scripts', express.static(__dirname + '/app'));
-// app.use('/data', express.static(__dirname + '/data'));
+app.use('/ckeditor', express.static(__dirname + '/ckeditor'));
 
 app.set('view engine', 'ejs');
 app.use(session({ secret: 'ilovescotchscotchyscotchscotch' }));

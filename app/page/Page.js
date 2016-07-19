@@ -32,8 +32,8 @@ var addPageScripts = function() {
       $('head').append('<link rel="stylesheet" href="/assets/style.css">');
       console.log('appended stylesheets');
   }
-  
-  if ($('head script[src="' + '//cdn.ckeditor.com/4.5.9/standard/ckeditor.js' + '"]').length > 0) {
+
+  if ($('head script[src="' + '//cdn.ckeditor.com/4.5.10/standard/ckeditor.js' + '"]').length > 0) {
       console.log('CKEditor CDN already added!');
   } else {
       $('head').append('<script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>');

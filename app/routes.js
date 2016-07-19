@@ -60,6 +60,21 @@ module.exports = function(app, passport, Page, fs) {
       res.send('good job');
     })
 
+    app.post('/dataUpdate', function(req, res){
+      // console.log(JSON.stringify(req.body));
+      // var json = JSON.stringify(req.body);
+      fs.readFile('./data/data.json', (err, data) => {
+          var jsonContent = JSON.parse(data);
+          jsonContent.forEach(function(item){
+            if(item.completePath === req.body.editorID){
+              console.log(item);
+            }
+          })
+          // console.log(jsonContent);
+      })
+      console.log(req.body);
+      res.send('good job');
+    })
 };
 
 // route middleware to make sure a user is logged in

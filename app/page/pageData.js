@@ -36,7 +36,7 @@ var pageDataModule = (function(){
 
   pageData.writeToJson = function(data){
     // var json = JSON.stringify(data);
-    console.log(data);
+    // console.log(data);
     $.ajax({
       type: 'POST',
       url : '/data',
@@ -75,7 +75,7 @@ var pageDataModule = (function(){
   };
 
   return {
-    getXPath : pageData.getXPath,
+    getCompletePath : pageData.getCompletePath,
     init : pageData.init
   }
 })();
