@@ -32,28 +32,24 @@ var addPageScripts = function() {
       $('head').append('<link rel="stylesheet" href="/assets/style.css">');
       console.log('appended stylesheets');
   }
-
   if ($('head script[src="' + '//cdn.ckeditor.com/4.5.10/standard/ckeditor.js' + '"]').length > 0) {
       console.log('CKEditor CDN already added!');
   } else {
       $('head').append('<script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>');
       console.log('appended CKEditor');
   }
-
   if ($('body script[src="' + 'https://code.jquery.com/jquery-1.12.4.min.js' + '"]').length > 0) {
       console.log('jquery already added!');
   } else {
       $('body').append('<script src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>');
       console.log('appended jquery');
   }
-
-  if( $('body script[src="' + 'https://cdn.jsdelivr.net/lodash/4.13.1/lodash.min.js' + '"]').length > 0){
-    console.log('lodash already added!');
-  } else{
-    $('body').append('<script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.min.js"></script>');
-    console.log('appended lodash');
-  }
-
+  // if( $('body script[src="' + 'https://cdn.jsdelivr.net/lodash/4.13.1/lodash.min.js' + '"]').length > 0){
+  //   console.log('lodash already added!');
+  // } else{
+  //   $('body').append('<script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.min.js"></script>');
+  //   console.log('appended lodash');
+  // }
   if ($('body script[src="' + '/scripts/page/pageData.js' + '"]').length > 0) {
       console.log('pageData.js already added!');
   } else {
@@ -62,7 +58,6 @@ var addPageScripts = function() {
       $('body').append('<script> pageDataModule.init(); </script>');
       console.log('appended pageData.js');
   }
-
   if ($('body script[src="' + '/scripts/page/pageController.js' + '"]').length > 0) {
       console.log('Editor.js already added!');
   } else {

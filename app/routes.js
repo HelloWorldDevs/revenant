@@ -60,20 +60,21 @@ module.exports = function(app, passport, Page, fs) {
       res.send('good job');
     })
 
+
     app.post('/dataUpdate', function(req, res){
-      // console.log(JSON.stringify(req.body));
-      // var json = JSON.stringify(req.body);
+      console.log(req.body);
       fs.readFile('./data/data.json', (err, data) => {
           var jsonContent = JSON.parse(data);
           jsonContent.forEach(function(item){
             if(item.completePath === req.body.editorID){
               console.log(item);
+              item.newText = req.body.editabledata
             }
           })
-          // console.log(jsonContent);
+          fs.writeFile('./data/data.json', JSON.stringify(jsonContent), (err, data) => {
+            res.send('good job');
+          })
       })
-      console.log(req.body);
-      res.send('good job');
     })
 };
 
@@ -81,9 +82,9 @@ module.exports = function(app, passport, Page, fs) {
 function isLoggedIn(req, res, next) {
 
     // if user is authenticated in the session, carry on
-    if (req.isAuthenticated())
-        return next();
+  if (req.isAuthenticated())
+      return next();
 
     // if they aren't redirect them to the home page
-    res.redirect('/');
+  res.redirect('/');
 }

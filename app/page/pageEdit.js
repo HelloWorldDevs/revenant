@@ -33,8 +33,6 @@ var pageEditModule = (function(){
   postUrl: '/dataUpdate',
   postData: {test: true},
   onSave: function(editor){
-    // var data = editor.getData();
-    // var id = editor.element.getAttribute("id");
     return true;
   },
   onSuccess: function(editor, data) { console.log('save successful', editor, data); },
@@ -86,28 +84,15 @@ var pageEditModule = (function(){
       }
       if (element.nodeType == Node.TEXT_NODE && element.nodeValue.trim() != '' && element.parentNode.nodeName != 'SCRIPT' && element.parentNode.nodeName != 'NOSCRIPT'){
         var completePath = pageDataModule.getCompletePath(element);
-        // console.log(xPath)
         element.parentNode.className += ' text--edit';
         element.parentNode.setAttribute('data-category', completePath);
         element.parentNode.setAttribute('contenteditable','true');
-
-
-        // var dataCategory = $('*[data-category]');
-        // dataCategory.each(function(i){
-        //   console.log(i);
-        // })
-        // console.log(dataCategory);
-        // CKEDITOR.disableAutoInline = true;
-        // CKEDITOR.inline(dataCategory, {
-        //   extraPlugins : 'inlinesave'
-        // });
 
         if(element.parentNode.nodeName === 'A'){
           element.parentNode.onclick = function(e){
             e.preventDefault();
           }
         }
-
       }
     }
     recurse(body);
