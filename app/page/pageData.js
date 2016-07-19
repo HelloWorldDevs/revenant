@@ -1,5 +1,4 @@
 var pageDataModule = (function(){
-
   var pageData = {};
   pageData.all = []
 
@@ -34,24 +33,46 @@ var pageDataModule = (function(){
     return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
   };
 
-  pageData.writeToJson = function(data){
-    // var json = JSON.stringify(data);
-    // console.log(data);
+//for returned text, resolves ckeditor inline character entitity issues when reloading new text.
+  pageData.decodeEntities = (function() {
+    // this prevents any overhead from creating the object each time
+    var element = document.createElement('div');
+    function decodeHTMLEntities (str) {
+      if(str && typeof str === 'string') {
+        // strip script/html tags
+        str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+        str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+        element.innerHTML = str;
+        str = element.textContent;
+        element.textContent = '';
+      }
+      return str;
+    }
+    return decodeHTMLEntities;
+  })();
+
+//checks data.json and updates elements on page with saved text different from older text
+  pageData.dataJsonSend = function(data){
     $.ajax({
       type: 'POST',
       url : '/data',
       contentType : 'application/json',
       data: JSON.stringify(data)
-    }).then(function(data , error){
-      if(error){
-        console.log(error);
+    }).then(function(data){
+      if(data.length > 0){
+        // console.log(data)
+        data.forEach(function(item){
+          var el = pageData.getElementByXpath(item.xpath);
+          var decodedText = pageData.decodeEntities(item.newText);
+          el.textContent = decodedText;
+        })
       }
     })
   }
 
-  pageData.writePageData = function(){
+//sends initial oldText and Complete path data to data.json file and for sending data to check against dataJson
+  pageData.dataJsonWrite = function(){
     var body = document.getElementsByTagName('body')[0];
-
     function recurse(element){
       if (element.childNodes.length > 0){
           for (var i = 0; i < element.childNodes.length; i++)
@@ -67,11 +88,11 @@ var pageDataModule = (function(){
       }
     }
     recurse(body);
-    pageData.writeToJson(pageData.all);
+    pageData.dataJsonSend(pageData.all);
   };
 
   pageData.init = function(){
-    pageData.writePageData();
+    pageData.dataJsonWrite();
   };
 
   return {

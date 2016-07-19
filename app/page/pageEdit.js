@@ -1,32 +1,7 @@
 var pageEditModule = (function(){
-  console.log('edit init!')
   var pageEdit = {};
 
-
-  pageEdit.getText = function($element){
-    return $element
-    .clone()	//clone the element
-    .children()	//select all the children
-    .remove()	//remove all the children
-    .end()	//again go back to selected element
-    .text();	//get the html of element
-  }
-
-
-  // pageEdit.editButton = function() {
-  //   var editButton = $('<div class="btn--edit"></div>');
-  //   $('.text--edit').append(editButton);
-  //   $('.btn--edit').hide();
-  //   $('.text--edit').on('mouseover', function(){
-  //     console.log($(this).find('.btn--edit'))
-  //     $(this).find('.btn--edit').fadeIn();
-  //   })
-  //   .on('mouseleave', function(){
-  //     $(this).find('.btn--edit').fadeOut();
-  //   });
-  // }
-
-  // CKEDITOR.plugins.addExternal('save', '/ckeditor/save/', 'plugin.js' );
+  //ckeditor inline save plugin configuration.
   CKEDITOR.plugins.addExternal('inlinesave', '/ckeditor/inlinesave/', 'plugin.js' );
   CKEDITOR.disableAutoInline = true;
   CKEDITOR.config.inlinesave = {
@@ -40,14 +15,8 @@ var pageEditModule = (function(){
   useJSON: true,
   useColorIcon: false
 };
-  // CKEDITOR.plugins.addExternal('autogrow', '/ckeditor/autogrow/', 'plugin.js' );
-  // CKEDITOR.config.autoGrow_onStartup = true;
-  //
-  // CKEDITOR.config.startupFocus = true;
-  // CKEDITOR.config.onSave = function(){
-  //   console.log('save?')
-  // };
 
+//inline editor added on text element click
   pageEdit.edit = function() {
     $('.text--edit').on('click', function(){
       var dataCategory = $(this).attr('data-category');
@@ -58,23 +27,9 @@ var pageEditModule = (function(){
         extraPlugins : 'inlinesave'
       });
     });
-
-    // $('.btn--edit').on('click', function(){
-    //   var $textEdit = $(this).parent('.text--edit');
-    //   var text =  pageEdit.getHTML($textEdit);
-    //   console.log(text);
-    //   var dataCategory = $textEdit.attr('data-category');
-    //   var editorTextarea = $('<form><textarea name="'+ dataCategory +'"></form>' + text + '</textarea>');
-    //   $textEdit.after(editorTextarea);
-    //   $textEdit.remove();
-    //   CKEDITOR.replace(dataCategory , {
-    //     extraPlugins : 'save,autogrow',
-    //     bodyId : dataCategory
-    //     // autoGrow_onStartup = true
-    //   });
-    // });
   };
 
+// adds edit class to all text nodes
   pageEdit.addEditClass = function(){
     var body = document.getElementsByTagName('body')[0];
     function recurse(element){
@@ -98,25 +53,10 @@ var pageEditModule = (function(){
     recurse(body);
   };
 
-  pageEdit.sendData = function(){
-    // console.log($('.text--edit'));
-    // $('.btn--edit').on('click', function(){
-    //   var $element = $(this).parent('.text--edit');
-    //   console.log(pageEdit.getText($element));
-    // });
-
-    //
-    // $.ajax({
-    //   type: 'update'
-    //   url: '/data'
-    // })
-}
 
   pageEdit.init = function(){
     pageEdit.addEditClass();
-    // pageEdit.editButton();
     pageEdit.edit();
-    pageEdit.sendData();
   };
 
   return {

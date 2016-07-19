@@ -1,7 +1,8 @@
-
-
+//all routes handled by server.
 module.exports = function(app, passport, Page, fs) {
-
+    var routesData = [];
+    
+    //scripts appended to page on login page load.
     app.get('/', function(req, res) {
         res.render('index.ejs'); // load the index.ejs file
         Page.fetchPage();
@@ -54,10 +55,28 @@ module.exports = function(app, passport, Page, fs) {
   });
 
     app.post('/data', function(req, res){
-      // console.log(JSON.stringify(req.body));
-      var json = JSON.stringify(req.body);
-      fs.writeFile('./data/data.json', json);
-      res.send('good job');
+      routesData.length = 0;
+      fs.readFile('./data/data.json', (err, data) => {
+          var jsonContent = JSON.parse(data);
+          req.body.forEach(function(reqitem){
+            jsonContent.forEach(function(datajson){
+              if(typeof datajson.newText !== 'undefined' && reqitem.completePath === datajson.completePath && reqitem.oldText != datajson.newText){
+                console.log('oldtext: ' + reqitem.oldText, 'newText: ' + datajson.newText);
+                var xpath = datajson.completePath.split(']][[')[1];
+                var newText = datajson.newText;
+                routesData.push({
+                  xpath: xpath,
+                  newText: newText
+                });
+              }
+            });
+          })
+          if(routesData.length > 0){
+            res.send(routesData);
+          } else {
+            res.send('no changes');
+          }
+      })
     })
 
 
@@ -72,7 +91,7 @@ module.exports = function(app, passport, Page, fs) {
             }
           })
           fs.writeFile('./data/data.json', JSON.stringify(jsonContent), (err, data) => {
-            res.send('good job');
+            res.send('newText added');
           })
       })
     })

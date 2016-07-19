@@ -1,3 +1,4 @@
+//Server script using url and npm modules for loading content and appending scripts to page. Currently writes as .ejs for serving.
 var cheerio = require('cheerio');
 var fs = require('fs');
 var _  = require('lodash');
@@ -11,20 +12,26 @@ var $;
 var json = [];
 
 var fetchPage = function(){
+
   var options = {
     uri: 'http://www.omsi.edu/history-and-mission',
     transform: function (body) {
         return cheerio.load(body);
     }
   };
-  rp(options).then(function($){
-    fs.writeFile('./views/omsi-mission-backup.ejs', $.html(), function(){
-      pageInit();
+
+  rp(options).then(function(response){
+    fs.writeFile('./views/omsi-mission-backup.ejs', response.html(), function(){
+      fs.readFile('./views/omsi-mission-backup.ejs' , function(err, data){
+        $ = cheerio.load(data);
+        addPageScripts();
+        fs.writeFile('./views/omsi-mission.ejs', $.html());
+      });
     })
   })
 }
 
-//Functions called for page modification before load.
+//Functions called for appending scripts before load.
 var addPageScripts = function() {
   if ($('head link[href="' + '/assets/style.css' + '"]').length > 0) {
       console.log('custom stylesheet already added');
@@ -83,68 +90,65 @@ var getXPath = function(element) {
   return xpath;
 };
 
-//add xpath data-category to selected elements.
-var addTextClasses = function(){
-  var $pageText = $('p');
-  _.uniq($pageText);
-  $pageText.each(function(index, element) {
-      if ($(this).text().length > 1) {
-          var xPath = getXPath(element);
-          $(this).addClass('text--edit');
-          $(this).attr('data-category', xPath);
-      }
-  });
-};
+//Testing xpath data-category to selected elements.
+// var addTextClasses = function(){
+//   var $pageText = $('p');
+//   _.uniq($pageText);
+//   $pageText.each(function(index, element) {
+//       if ($(this).text().length > 1) {
+//           var xPath = getXPath(element);
+//           $(this).addClass('text--edit');
+//           $(this).attr('data-category', xPath);
+//       }
+//   });
+// };
 
-//for testing getXPath and getting element by xpath
-var writeTestJson = function() {
-  var xml = $.xml();
-  var doc = new dom().parseFromString(xml);
-  var $pageText = $('p');
-  _.uniq($pageText);
-  //  store xpath in array
-  $pageText.each(function(index, element) {
-      if ($(this).text().length > 1) {
-          var xPath = getXPath(element);
-          var xPathText = xpath.select(xPath, doc)[0].toString();
-          json.push({
-              ptext: $(this).text(),
-              xpath: xPath,
-              elementByXpath: xPathText
-          });
-      }
-  });
-};
+//Testing getXPath and getting element by xpath
+// var writeTestJson = function() {
+//   var xml = $.xml();
+//   var doc = new dom().parseFromString(xml);
+//   var $pageText = $('p');
+//   _.uniq($pageText);
+//   //  store xpath in array
+//   $pageText.each(function(index, element) {
+//       if ($(this).text().length > 1) {
+//           var xPath = getXPath(element);
+//           var xPathText = xpath.select(xPath, doc)[0].toString();
+//           json.push({
+//               ptext: $(this).text(),
+//               xpath: xPath,
+//               elementByXpath: xPathText
+//           });
+//       }
+//   });
+// };
 
 
 //functions called in pageInit. Next is passed through three functions.
-var loadPageFirst = function(pageFile , callback) {
-  fs.readFile(pageFile , function(err, data){
-    $ = cheerio.load(data);
-    callback();
-  });
-  console.log('inside loadPage');
-};
-
-var writeAll = function(){
-  addPageScripts();
-  writeTestJson();
-  writePageFile('./views/omsi-mission.ejs', 'output.json');
-};
-
-var writePageFile = function(pageFile, jsonFile) {
-  fs.writeFile(pageFile, $.html(), function(){
-    fs.writeFile(jsonFile, JSON.stringify(json, null, 4));
-  });
-};
-
-//page init middleware to handle async file writing before page render. Passes next to last function called
- var pageInit = function(request, response){
-  loadPageFirst('./views/omsi-mission-backup.ejs', writeAll);
-}
-
+// var loadPageFirst = function(pageFile , callback) {
+//   fs.readFile(pageFile , function(err, data){
+//     $ = cheerio.load(data);
+//     callback();
+//   });
+//   console.log('inside loadPage');
+// };
+//
+// var writeAll = function(){
+//   addPageScripts();
+//   writePageFile('./views/omsi-mission.ejs', 'output.json');
+// };
+//
+// var writePageFile = function(pageFile, jsonFile) {
+//   fs.writeFile(pageFile, $.html(), function(){
+//     fs.writeFile(jsonFile, JSON.stringify(json, null, 4));
+//   });
+// };
+//
+// //page init middleware to handle async file writing before page render. Passes next to last function called
+//  var pageInit = function(request, response){
+//   loadPageFirst('./views/omsi-mission-backup.ejs', writeAll);
+// }
 
 module.exports = {
-  pageInit: pageInit,
   fetchPage: fetchPage
 };

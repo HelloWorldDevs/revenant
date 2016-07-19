@@ -3,21 +3,6 @@ textarea {
   width: 100%;
 }
 
-.btn--edit {
-  margin: 0 0 0 auto;
-  height: 2rem;
-  font-size: 2rem;
-  width: 5rem;
-  border: 1px solid rgba(81, 203, 238, 1);
-  border-radius: .3rem;
-  line-height: 2em;
-  text-align: center;
-}
-
-.btn--edit::after {
-  content: 'edit';
-}
-
 .text--edit {
   /*display: block;*/
   /*flex-direction: column;*/
