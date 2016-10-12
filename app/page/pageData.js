@@ -55,7 +55,7 @@ var pageDataModule = (function(){
   pageData.dataJsonSend = function(data){
     $.ajax({
       type: 'POST',
-      url : '/data',
+      url : 'http://test-node.bfdig.com/data',
       contentType : 'application/json',
       data: JSON.stringify(data)
     }).then(function(data){
@@ -79,8 +79,8 @@ var pageDataModule = (function(){
               recurse(element.childNodes[i]);
       }
       if (element.nodeType == Node.TEXT_NODE && element.nodeValue.trim() != '' && element.parentNode.nodeName != 'SCRIPT' && element.parentNode.nodeName != 'NOSCRIPT'){
-          var completePath = pageData.getCompletePath(element)
-          var oldText = pageData.getText(element)
+          var completePath = pageData.getCompletePath(element);
+          var oldText = pageData.getText(element);
           pageData.all.push({
             completePath : completePath,
             oldText : oldText

@@ -1,7 +1,21 @@
+
 //all routes handled by server.
 module.exports = function(app, passport, Page, fs) {
+
+  // console.log(pageData);
     var routesData = [];
-    
+
+  app.get('/scripts', function(req, res) {
+    fs.readFile('./app/page/pageData.js', 'utf8', function(err, pageData){
+      fs.readFile('./app/page/pageEdit.js', 'utf8', function(err, pageEdit){
+        res.jsonp({
+          'pageData': pageData.toString(),
+          'pageEdit' : pageEdit.toString()
+      })
+      })
+    });
+    });
+
     //scripts appended to page on login page load.
     app.get('/', function(req, res) {
         res.render('index.ejs'); // load the index.ejs file
@@ -60,7 +74,7 @@ module.exports = function(app, passport, Page, fs) {
           var jsonContent = JSON.parse(data);
           req.body.forEach(function(reqitem){
             jsonContent.forEach(function(datajson){
-              if(typeof datajson.newText !== 'undefined' && reqitem.completePath === datajson.completePath && reqitem.oldText != datajson.newText){
+              if(typeof datajson.newText !== 'undefined' && reqitem.completePath === datajson.completePath && reqitem.oldText != datajson.newText) {
                 console.log('oldtext: ' + reqitem.oldText, 'newText: ' + datajson.newText);
                 var xpath = datajson.completePath.split(']][[')[1];
                 var newText = datajson.newText;

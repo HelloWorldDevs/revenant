@@ -38,7 +38,7 @@ myPassport(passport); // pass passport for configuration
 app.use(morgan('dev'));
 app.use(cookieParser());
 
-
+app.set('jsonp callback name', 'callback');
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
