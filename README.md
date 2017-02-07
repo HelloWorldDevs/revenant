@@ -33,3 +33,12 @@ pageModule.init(pageControllerModule.init);
 ##Use with revenant-api
 User's must have authorized profiles on revenant-api to login and start editing site. 
 Login and begin editing content, logout or close page to end session. 
+
+###Add Outh Credentials
+Add directory and file `credentials/credentials.js` to revenant root with following code:
+
+```const OAUTH_CLIENT_ID = "[YOUR_OUTH_CLIENT_UUID]";```
+
+Replace `[YOUR_OUTH_CLIENT_UUID]` with client ID after setting up user on revenant-api. 
+
+
