@@ -44,7 +44,7 @@ var pageModule = (function($){
       console.log('current revenant', currentPage);
       $.ajax({
           type: 'POST',
-          url: 'http://revenant-api.dev/revenant_page/page',
+          url: 'http://revenant-api.bfdig.com/revenant_page/page',
           headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/hal+json'
@@ -64,7 +64,7 @@ var pageModule = (function($){
       const pageLocation = window.location.hostname + window.location.pathname;
       $.ajax({
           method: 'GET',
-          url:'http://revenant-api.dev/rev-content/?url=' + pageLocation,
+          url:'http://revenant-api.bfdig.com/rev-content/?url=' + pageLocation,
           success: function(data) {
               console.log('success again!', data);
 

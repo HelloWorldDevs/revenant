@@ -15,7 +15,7 @@ Append to  `<head>`
  ```
 
 
-###JS/CDNs
+###JS/CDNs  
 Append below all other `<script>` tags
 
 ``` 
