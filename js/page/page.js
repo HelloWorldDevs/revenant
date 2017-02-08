@@ -1,4 +1,4 @@
-var pageModule = (function($){
+var pageModule = (function($) {
   var page = {};
 
   page.getText = function(e) {
@@ -42,19 +42,24 @@ var pageModule = (function($){
   //helper function for posting to rev-api, creates page and default content item.
   page.createRevenantPage = function(currentPage) {
       console.log('current revenant', currentPage);
+      if (sessionStorage.getItem('rev_auth')) {
+          var authBearer = 'Bearer ' + JSON.parse(sessionStorage.getItem('rev_auth')).access_token;
+      }
+      console.log('authBearer: ', authBearer)
       $.ajax({
           type: 'POST',
           url: 'http://revenant-api.bfdig.com/revenant_page/page',
           headers: {
               'Accept': 'application/json',
-              'Content-Type': 'application/hal+json'
+              'Content-Type': 'application/hal+json',
+              'Authorization': authBearer
           },
           data: JSON.stringify(currentPage),
           success: function(data) {
               console.log('success', data)
           },
           error: function (err) {
-              console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
+              console.log("AJAX error in request: " + err);
           }
       });
   };
