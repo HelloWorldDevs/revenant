@@ -37,8 +37,11 @@ Login and begin editing content, logout or close page to end session.
 ###Add Outh Credentials
 Add directory and file `credentials/credentials.js` to revenant root with following code:
 
-```const OAUTH_CLIENT_ID = "[YOUR_OUTH_CLIENT_UUID]";```
+```
+const OAUTH_CLIENT_ID = "[YOUR_OUTH_CLIENT_UUID]";
+const OAUTH_CLIENT_SECRET = "[YOUR_OUTH_CLIENT_SECRET]";
+```
 
-Replace `[YOUR_OUTH_CLIENT_UUID]` with client ID after setting up user on revenant-api. 
+Replace `[YOUR_OUTH_CLIENT_UUID]` and `[YOUR_OUTH_CLIENT_UUID]` with client ID and secret after setting up Ouath client on revenant-api. 
 
 

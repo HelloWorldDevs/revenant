@@ -16,7 +16,7 @@ var pageControllerModule = (function($){
       var data = $(this).data('complete-path');
       data.username = JSON.parse(sessionStorage.getItem('rev_auth')).username;
       var authBearer = 'Bearer ' + JSON.parse(sessionStorage.getItem('rev_auth')).access_token;
-      console.log('data here!', data);
+      // console.log('data here!', data);
       var el = document.querySelector('[data-category="'+ dataCategory +'"');
       if (!el.hasAttribute('id', data.xpath)) {
         el.setAttribute('id', data.xpath);
@@ -26,11 +26,15 @@ var pageControllerModule = (function($){
           postData: {data: data},
           useJson: true,
           onSave: function(editor) {
-            console.log('save success!', editor);
+            // console.log('save success!', editor);
             return true;
           },
-          onSuccess: function(editor, data) { console.log('save successful', editor, data); },
-          onFailure: function(editor, status, request) { console.log('save failed', editor, status, request); },
+          onSuccess: function(editor, data) {
+              // console.log('save successful', editor, data);
+          },
+          onFailure: function(editor, status, request) {
+              // console.log('save failed', editor, status, request);
+          },
           useJSON: true,
           useColorIcon: false
         };
@@ -129,7 +133,7 @@ var pageControllerModule = (function($){
           data = {
             "grant_type": "password",
             "client_id": OAUTH_CLIENT_ID,
-            "client_secret": password,
+            "client_secret": OAUTH_CLIENT_SECRET,
             "username": username,
             "password": password,
           }
@@ -139,15 +143,16 @@ var pageControllerModule = (function($){
             data: data,
           })
             .error(function(error){
-            console.log('oauth error', error)
+            // console.log('oauth error', error)
           })
             .done(function (response, status, xhr) {
-              console.log('oauth response', response);
+              // console.log('oauth response', response);
                 sessionStorage.setItem( 'rev_auth', JSON.stringify({
                   "username": username,
                   "access_token":response.access_token,
                   "refresh_token": response.refresh_token
                 }));
+                pageModule.init();
                 $('.rev_login').remove();
                 pageController.addEditClass();
                 pageController.edit();

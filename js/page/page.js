@@ -41,11 +41,8 @@ var pageModule = (function($) {
 
   //helper function for posting to rev-api, creates page and default content item.
   page.createRevenantPage = function(currentPage) {
-      console.log('current revenant', currentPage);
-      if (sessionStorage.getItem('rev_auth')) {
-          var authBearer = 'Bearer ' + JSON.parse(sessionStorage.getItem('rev_auth')).access_token;
-      }
-      console.log('authBearer: ', authBearer)
+      // console.log('current revenant', currentPage);
+      var authBearer = 'Bearer ' + JSON.parse(sessionStorage.getItem('rev_auth')).access_token;
       $.ajax({
           type: 'POST',
           url: 'http://revenant-api.bfdig.com/revenant_page/page',
@@ -56,10 +53,10 @@ var pageModule = (function($) {
           },
           data: JSON.stringify(currentPage),
           success: function(data) {
-              console.log('success', data)
+              // console.log('success', data)
           },
           error: function (err) {
-              console.log("AJAX error in request: " + err);
+              // console.log("AJAX error in request: " + err);
           }
       });
   };
@@ -71,10 +68,9 @@ var pageModule = (function($) {
           method: 'GET',
           url:'http://revenant-api.bfdig.com/rev-content/?url=' + pageLocation,
           success: function(data) {
-              console.log('success again!', data);
-
-              //if no revenant nodes are sent, send current revenant data to be created as revenant revenant entity reference
-              if (!data.length) {
+              // console.log('success again!', data);
+              //if no revenant nodes are sent and the user is logged in, send current revenant data to be created as revenant revenant entity reference
+              if (!data.length &&  sessionStorage.getItem('rev_auth')) {
                   var currentPage = {};
                   currentPage.title = window.location.hostname + window.location.pathname;
                   currentPage.url = pageLocation;
@@ -92,10 +88,12 @@ var pageModule = (function($) {
                       editedNode.innerHTML = item.field_new_content;
                   })
               }
-              callback();
+              if (callback) {
+                callback();
+              }
           },
           error: function (err) {
-              console.log("AJAX error in request: " + err);
+              // console.log("AJAX error in request: " + err);
           }
       });
   };
