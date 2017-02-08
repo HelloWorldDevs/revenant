@@ -80,7 +80,7 @@ var pageModule = (function($){
               else {
                   data.forEach(function(item) {
                     //excludes default content item.
-                      if (item.field_xpath.includes('default')) {
+                      if (!item || item.field_xpath.includes('default')) {
                           return
                       }
                       var editedNode = page.getElementByXpath(item.field_xpath);

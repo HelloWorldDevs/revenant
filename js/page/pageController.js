@@ -5,6 +5,9 @@ var pageControllerModule = (function($){
   CKEDITOR.plugins.addExternal('inlinesave', '/revenant/ckeditor/inlinesave/', 'plugin.js' );
   CKEDITOR.disableAutoInline = true;
 
+  //for clearing ckeditor cache and allowing set Authorization Header
+  CKEDITOR.timestamp='ABCD';
+
 
 //inline editor added on text element click
   pageController.edit = function() {
@@ -12,12 +15,14 @@ var pageControllerModule = (function($){
       var dataCategory = $(this).attr('data-category');
       var data = $(this).data('complete-path');
       data.username = JSON.parse(sessionStorage.getItem('rev_auth')).username;
+      var authBearer = 'Bearer ' + JSON.parse(sessionStorage.getItem('rev_auth')).access_token;
       console.log('data here!', data);
       var el = document.querySelector('[data-category="'+ dataCategory +'"');
       if (!el.hasAttribute('id', data.xpath)) {
         el.setAttribute('id', data.xpath);
         CKEDITOR.config.inlinesave = {
           postUrl: 'http://revenant-api.bfdig.com/revenant_page/page_content',
+          postAuth: authBearer,
           postData: {data: data},
           useJson: true,
           onSave: function(editor) {
