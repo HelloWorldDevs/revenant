@@ -53,10 +53,10 @@ var pageModule = (function($) {
           },
           data: JSON.stringify(currentPage),
           success: function(data) {
-              // console.log('success', data)
+              console.log('create page post success', data)
           },
           error: function (err) {
-              // console.log("AJAX error in request: " + err);
+              console.log("create page post error: " + err);
           }
       });
   };
