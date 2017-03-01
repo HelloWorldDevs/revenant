@@ -97,30 +97,31 @@ var pageControllerModule = (function($){
   //appends login and and event handler for hiding/showing and authenticating.
   pageController.appendLogin = function() {
       (function() {
-          templateModule.getCompiledTemplate('login')
-              .then(function(html){
-              $('body').prepend(html);
+          // templateModule.getCompiledTemplate('login')
+          //     .then(function(html){
+              $('body').prepend(LoginTemplate);
               $('.rev_login_reveal').on('click', function() {
                 $('.rev_login__contaier').toggleClass('show');
                   pageController.loginAuthenticate();
               })
-          });
+          // });
       }());
   };
 
   //appends control panel for user and passes session variable with username to .hbs template
   pageController.appendControlPanel = function() {
-      templateModule.getCompiledTemplate('user_control_panel')
-          .then(function(html){
+      // templateModule.getCompiledTemplate('user_control_panel')
+          // .then(function(html){
               var rev_auth = JSON.parse(sessionStorage.getItem('rev_auth'));
-              $('body').prepend(html(rev_auth));
+              var UserControlPanel = UserControlPanelTemplate(rev_auth.username);
+              $('body').prepend(UserControlPanel);
               $('.rev_logout').on('click', function() {
                   $('.rev_user_control_panel').remove();
                   pageController.removeEditClass();
                   sessionStorage.clear();
                   pageController.init();
               })
-          });
+          // });
   };
 
   //authenticates using D8 simple_oauth module parameters. Stores session var with tokens and username, removes login and calls functions for adding edit class and control panel.
