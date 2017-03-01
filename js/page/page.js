@@ -98,10 +98,18 @@ var pageModule = (function($) {
       });
   };
 
+  RevenantAPIServer = "omsi-test.bfdig.com";
+
   //initializes check for content and passes in pageController as callback
   page.init = function(callback) {
-      if (typeof(page.RevenantAPIServer) == "undefined") {
-          page.RevenantAPIServer = "omsi-test.bfdig.com";
+      if (typeof(RevenantAPIServer) == "undefined") {
+          console.log('undefined')
+          RevenantAPIServer = "omsi-test.bfdig.com";
+          page.RevenantAPIServer = RevenantAPIServer;
+      } else {
+          page.RevenantAPIServer = RevenantAPIServer;
+
+          console.log(page.RevenantAPIServer);
       }
     page.revenantContentCheck(callback);
   };
