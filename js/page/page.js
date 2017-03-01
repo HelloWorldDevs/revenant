@@ -100,13 +100,14 @@ var pageModule = (function($) {
 
   //initializes check for content and passes in pageController as callback
   page.init = function(callback) {
-      if (RevenantAPIServer == "undefined") {
-          RevenantAPIServer = "omsi-test.bfdig.com";
+      if (typeof(this.RevenantAPIServer) == "undefined") {
+          page.RevenantAPIServer = "omsi-test.bfdig.com";
       }
     page.revenantContentCheck(callback);
   };
 
   return {
+    RevenantAPIServer: page.RevenantAPIServer,
     getCompletePath : page.getCompletePath,
     init : page.init,
   }
