@@ -121,3 +121,5 @@ var pageModule = (function($) {
   }
 
 })(jQuery);
+
+pageModule.init(pageControllerModule.init);
