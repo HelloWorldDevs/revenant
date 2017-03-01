@@ -3,9 +3,10 @@ var templateModule = (function(module){
         console.log('inside of getCompiledTemplate');
         return $.ajax({
             type: 'GET',
+            crossDomain: true,
             url: 'http://' + RevenantAPIServer + '/revenant/templates/' + name + '.hbs'
         })
-            .then(function(text){
+            .then(function(text) {
                 return Handlebars.compile(text);
             });
     }
