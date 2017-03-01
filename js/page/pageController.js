@@ -141,6 +141,7 @@ var pageControllerModule = (function($){
           $.ajax({
             url: "http://revenant-api.bfdig.com/oauth/token",
             method: "POST",
+            headers: {'X-Requested-With': null},
             data: data,
           })
             .error(function(error){

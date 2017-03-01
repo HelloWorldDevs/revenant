@@ -49,7 +49,8 @@ var pageModule = (function($) {
           headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/hal+json',
-              'Authorization': authBearer
+              'Authorization': authBearer,
+              'X-Requested-With': null
           },
           data: JSON.stringify(currentPage),
           success: function(data) {
