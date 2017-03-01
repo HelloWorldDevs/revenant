@@ -5,7 +5,7 @@ var templateModule = (function(module){
             type: 'GET',
             url: 'http://' + pageModule.RevenantAPIServer + '/revenant/templates/' + name + '.hbs'
         })
-            .then(function(text) {
+            .then(function(text){
                 return Handlebars.compile(text);
             });
     }
