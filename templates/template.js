@@ -3,7 +3,7 @@ var templateModule = (function(module){
         // console.log('inside of getCompiledTemplate');
         return $.ajax({
             type: 'GET',
-            url: 'revasdfasdfasdfasdenant/templates/' + name + '.hbs'
+            url: '/revenant/templates/' + name + '.hbs'
         })
             .then(function(text){
                 return Handlebars.compile(text);
